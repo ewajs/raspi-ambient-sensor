@@ -79,7 +79,7 @@ function update(data) {
       datasets: [
         {
           label: "Humedad",
-          data: tempData,
+          data: humData,
           borderWidth: 1,
           borderColor: "#0000FF",
           backgroundColor: "#9696ff",
