@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  app:
+    image: ewajs/rpi3ambientapp:latest
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    depends_on:
+      - sensor
+    volumes:
+      - ./db:/app/db
+    ports:
+      - 80:8080
+
+  sensor:
+    image: ewajs/rpi3ambientsensor:latest
+    build:
+      context: .
+      dockerfile: ./sensor/Dockerfile
+    volumes:
+      - ./db:/db
+    devices:
+      - /dev/mem:/dev/mem
+    privileged: true

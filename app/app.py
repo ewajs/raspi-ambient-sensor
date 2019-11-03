@@ -10,7 +10,7 @@ def index():
 
 @app.route("/get", methods=["GET"])
 def get_data():
-	conn = sqlite3.connect("temphum.db")
+	conn = sqlite3.connect("/app/db/temphum.db")
 	c = conn.cursor()
 	c.execute("SELECT id, Temperature, Humidity, DATETIME(Timestamp,'localtime') FROM Ambient ORDER BY Timestamp DESC")
 	resp = json.dumps(list(c.fetchall()))

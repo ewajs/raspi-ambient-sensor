@@ -4,7 +4,7 @@ import sqlite3
 import time
 
 # Setup DB
-conn = sqlite3.connect('temphum.db')
+conn = sqlite3.connect('/db/temphum.db')
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS Ambient 
     (id INTEGER PRIMARY KEY AUTOINCREMENT,
