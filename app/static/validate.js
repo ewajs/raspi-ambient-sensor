@@ -14,3 +14,4 @@ function check() {
 
 tempCheck.addEventListener("click", check);
 humCheck.addEventListener("click", check);
+window.addEventListener("onpageshow", check);
