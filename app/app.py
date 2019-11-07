@@ -7,8 +7,8 @@ import sqlite3
 app = Flask(__name__)
 
 def connect():
-	#conn = sqlite3.connect("/app/db/temphum.db") # Production DB
-	conn = sqlite3.connect("app/test.db") # For testing purposes
+	conn = sqlite3.connect("/app/db/temphum.db") # Production DB
+	#conn = sqlite3.connect("app/test.db") # For testing purposes
 	return conn
 
 def get_report_data(conn):
@@ -109,5 +109,5 @@ def export_data():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=8080, debug=True)
+	app.run(host='0.0.0.0', port=8080)
 
