@@ -16,27 +16,20 @@
     <div class="container">
       {% include "menu.html" %}
       <div class="row">
-        <h1>Temperatura y Humedad del Invernadero</h1>
+        <div class="col">
+          <h1>Reporte</h1>
+          <h2>{{ report_data[0] }}</h2>
+        </div>
       </div>
-      <div class="row">
-        <h2>Última Medición: <span id="lastMeasureDate"></span></h2>
-      </div>
-      <div class="row">
-        <h2>Temperatura: <span id="temp"></span> ºC</h2>
-      </div>
-      <div class="row">
-        <h2>Humedad: <span id="hum"></span> %HR</h2>
-      </div>
-      <div class="row">
-        <h2>&Uacute;ltimas mediciones</h2>
-      </div>
+      {% if report_data[1] == 1 %}
       <div class="row">
         <canvas id="tempCanvas"></canvas>
       </div>
-
+      {% endif %} {% if report_data[2] == 1 %}
       <div class="row">
         <canvas id="humCanvas"></canvas>
       </div>
+      {% endif %}
     </div>
 
     <script
@@ -59,7 +52,10 @@
       integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q="
       crossorigin="anonymous"
     ></script>
-    <script src="{{ url_for('static', filename='moment.js') }}"></script>
-    <script src="{{ url_for('static',filename='scripts.js') }}"></script>
+    <script>
+      var data = {{ data|tojson }};
+      var report_data = {{ report_data|tojson }};
+    </script>
+    <script src="{{ url_for('static',filename='report.js') }}"></script>
   </body>
 </html>

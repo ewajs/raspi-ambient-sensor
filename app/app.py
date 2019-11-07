@@ -1,12 +1,14 @@
-from flask import Flask, jsonify, Response, render_template, request, url_for
+import csv
+from flask import Flask, jsonify, make_response, Response, render_template, request, url_for
+import io
 import json
 import sqlite3
 
 app = Flask(__name__)
 
 def connect():
-	conn = sqlite3.connect("/app/db/temphum.db") # Production DB
-	#conn = sqlite3.connect("app/test.db") # For testing purposes
+	#conn = sqlite3.connect("/app/db/temphum.db") # Production DB
+	conn = sqlite3.connect("app/test.db") # For testing purposes
 	return conn
 
 def get_report_data(conn):
@@ -68,6 +70,42 @@ def report():
 		data = get_report_data(conn)
 		conn.close()
 		return render_template("report.html", data=data, success=success)
+
+@app.route("/show_report", methods=["GET"])
+def show_report():
+	if request.method == 'GET':
+		conn = connect()
+		c = conn.cursor()
+		rid = request.args["reportid"]
+		c.execute("""SELECT * FROM Ambient WHERE Timestamp 
+		BETWEEN (SELECT StartDate FROM Report WHERE id = ?) AND (SELECT StopDate FROM Report WHERE id = ?) 
+		ORDER BY Timestamp DESC """, (rid, rid))
+		data = list(c.fetchall())
+		c = conn.cursor()
+		c.execute("SELECT ReportName, Temperature, Humidity FROM Report WHERE id = ?", (rid, ))
+		report_data = list(c.fetchall())[0]
+		conn.close()
+		return render_template("show_report.html", data=data, report_data=report_data)
+
+@app.route('/export', methods=["GET"])
+def export_data():
+	if request.method == 'GET':
+		si = io.StringIO()
+		cw = csv.writer(si)
+		conn = connect()
+		c = conn.cursor()
+		rid = request.args["reportid"]
+		c.execute("""SELECT Timestamp, Temperature, Humidity FROM Ambient WHERE Timestamp 
+		BETWEEN (SELECT StartDate FROM Report WHERE id = ?) AND (SELECT StopDate FROM Report WHERE id = ?) 
+		ORDER BY Timestamp DESC """, (rid, rid))
+		# Add the headers
+		cw.writerow(["Fecha y Hora", "Temperatura", "Humedad"])
+		# Then the data
+		cw.writerows(list(c.fetchall()))
+		output = make_response(si.getvalue())
+		output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+		output.headers["Content-type"] = "text/csv"
+		return output
 
 
 if __name__ == '__main__':

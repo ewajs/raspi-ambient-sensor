@@ -14,6 +14,7 @@
   </head>
   <body>
     <div class="container">
+      {% include "menu.html" %}
       <div class="row">
         <div class="col">
           <h1>Reportes</h1>
@@ -66,7 +67,7 @@
             ese reporte incluya Temperatura y/o Humedad respectivamente y las
             fechas de inicio y fin del reporte.
           </p>
-          <form action="get_report" method="GET">
+          <form action="show_report" method="GET">
             <div class="form-group">
               <label for="reportSelect">Seleccionar Reporte</label>
               <select class="form-control" id="reportSelect" name="reportid">
@@ -77,6 +78,9 @@
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Ver</button>
+            <button type="button" class="btn btn-success" id="exportData">
+              Exportar
+            </button>
           </form>
         </div>
       </div>
